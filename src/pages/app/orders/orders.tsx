@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
 
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
