@@ -51,7 +51,7 @@ export function RevenueChart() {
               stroke="#888"
               axisLine={false}
               tickLine={false}
-              width={100}
+              width={70}
               tickFormatter={(value: number) =>
                 value.toLocaleString("pt-BR", {
                   style: "currency",
