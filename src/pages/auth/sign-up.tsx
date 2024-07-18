@@ -27,6 +27,8 @@ export function SignUp() {
     formState: { isSubmitting, errors },
   } = useForm<SignUpForm>({ resolver: zodResolver(signUpForm) });
 
+  // const { mutateAsync: authenticate } = useMutation({ mutationFn: signIn });
+
   async function handleSignUp(data: SignUpForm) {
     try {
       console.log(data);
