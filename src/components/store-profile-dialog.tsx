@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { getManagedRestaurnat } from "@/api/get-managed-restaurant";
+import { getManagedRestaurant } from "@/api/get-managed-restaurant";
 
 import { Button } from "./ui/button";
 import {
@@ -27,7 +27,7 @@ type StoreProfileDialogType = z.infer<typeof StoreProfileDialogSchema>;
 export function StoreProfileDoalog() {
   const { data: managedRestaurant } = useQuery({
     queryKey: ["managedRestaurant"],
-    queryFn: getManagedRestaurnat,
+    queryFn: getManagedRestaurant,
   });
 
   const { register } = useForm<StoreProfileDialogType>({

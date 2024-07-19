@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Building, ChevronDown, LogOut } from "lucide-react";
 
-import { getManagedRestaurnat } from "@/api/get-managed-restaurant";
+import { getManagedRestaurant } from "@/api/get-managed-restaurant";
 import { getProfile } from "@/api/get-profile";
 
 import { StoreProfileDoalog } from "./store-profile-dialog";
@@ -26,7 +26,7 @@ export function AccountMenu() {
   const { data: managedRestaurant, isLoading: isManagedRestaurantLoading } =
     useQuery({
       queryKey: ["managedRestaurant"],
-      queryFn: getManagedRestaurnat,
+      queryFn: getManagedRestaurant,
     });
 
   return (
