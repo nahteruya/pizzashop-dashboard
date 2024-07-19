@@ -48,7 +48,7 @@ export function SignUp() {
         },
       });
     } catch {
-      toast.error("Credenciais inválidas");
+      toast.error("Erro ao cadastrar restaurante");
     }
   }
 
