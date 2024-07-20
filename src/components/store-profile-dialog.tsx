@@ -25,7 +25,7 @@ import { Textarea } from "./ui/textarea";
 
 const StoreProfileDialogSchema = z.object({
   name: z.string().min(1),
-  description: z.string(),
+  description: z.string().nullable(),
 });
 
 type StoreProfileDialogType = z.infer<typeof StoreProfileDialogSchema>;
@@ -51,22 +51,36 @@ export function StoreProfileDoalog() {
     },
   });
 
+  function updateManagedRestaurantCached({
+    name,
+    description,
+  }: StoreProfileDialogType) {
+    const cached = queryClient.getQueryData<GetManagedRestaurantResponse>([
+      "managedRestaurant",
+    ]);
+
+    if (cached) {
+      queryClient.setQueryData<GetManagedRestaurantResponse>(
+        ["managedRestaurant"],
+        {
+          ...cached,
+          name,
+          description,
+        },
+      );
+    }
+    return cached;
+  }
+
   const { mutateAsync: updateProfileFn } = useMutation({
     mutationFn: updateProfile,
-    onSuccess(_, { name, description }) {
-      const cached = queryClient.getQueryData<GetManagedRestaurantResponse>([
-        "managedRestaurant",
-      ]);
-
-      if (cached) {
-        queryClient.setQueryData<GetManagedRestaurantResponse>(
-          ["managedRestaurant"],
-          {
-            ...cached,
-            name,
-            description,
-          },
-        );
+    onMutate({ name, description }) {
+      const cached = updateManagedRestaurantCached({ name, description });
+      return { previusProfile: cached };
+    },
+    onError(_, __, context) {
+      if (context?.previusProfile) {
+        updateManagedRestaurantCached(context.previusProfile);
       }
     },
   });
