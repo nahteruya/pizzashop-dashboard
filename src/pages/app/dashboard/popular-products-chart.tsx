@@ -1,17 +1,19 @@
+import { useQuery } from "@tanstack/react-query";
 import { BarChart } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import colors from "tailwindcss/colors";
 
+import { getPopularProducts } from "@/api/get-popular-products";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function PopularProductsChart() {
-  const data = [
-    { product: "Peperoni", amount: 40 },
-    { product: "Mussarela", amount: 50 },
-    { product: "Marguerita", amount: 62 },
-    { product: "4 Queijos", amount: 24 },
-    { product: "Frango", amount: 34 },
-  ];
+  const { data: getPopularProductsFn } = useQuery({
+    queryKey: ["getPopularProducts"],
+    queryFn: getPopularProducts,
+  });
+
+  const data = getPopularProductsFn;
+  console.log(data);
 
   const COLORS = [
     colors.sky["500"],
@@ -34,52 +36,56 @@ export function PopularProductsChart() {
       <CardContent>
         <ResponsiveContainer width="100%" height={248}>
           <PieChart style={{ fontSize: 12 }}>
-            <Pie
-              data={data}
-              dataKey="amount"
-              nameKey="product"
-              outerRadius={86}
-              innerRadius={64}
-              strokeWidth={8}
-              labelLine={false}
-              label={({
-                cx,
-                cy,
-                midAngle,
-                innerRadius,
-                outerRadius,
-                value,
-                index,
-              }) => {
-                const RADIAN = Math.PI / 180;
-                const radius = 12 + innerRadius + (outerRadius - innerRadius);
-                const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+            {data && (
+              <Pie
+                data={data}
+                dataKey="amount"
+                nameKey="product"
+                cx="50%"
+                cy="50%"
+                outerRadius={86}
+                innerRadius={64}
+                strokeWidth={8}
+                labelLine={false}
+                label={({
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  value,
+                  index,
+                }) => {
+                  const RADIAN = Math.PI / 180;
+                  const radius = 12 + innerRadius + (outerRadius - innerRadius);
+                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-                return (
-                  <text
-                    x={x}
-                    y={y}
-                    className="fill-muted-foreground text-xs"
-                    textAnchor={x > cx ? "start" : "end"}
-                    dominantBaseline="central"
-                  >
-                    {data[index].product.length > 12
-                      ? data[index].product.substring(0, 12).concat("...")
-                      : data[index].product}{" "}
-                    ({value})
-                  </text>
-                );
-              }}
-            >
-              {data.map((_, i) => (
-                <Cell
-                  key={`cell-${i}`}
-                  fill={COLORS[i]}
-                  className="stroke-background"
-                />
-              ))}
-            </Pie>
+                  return (
+                    <text
+                      x={x}
+                      y={y}
+                      className="fill-muted-foreground text-xs"
+                      textAnchor={x > cx ? "start" : "end"}
+                      dominantBaseline="central"
+                    >
+                      {data[index].product.length > 12
+                        ? data[index].product.substring(0, 12).concat("...")
+                        : data[index].product}{" "}
+                      ({value})
+                    </text>
+                  );
+                }}
+              >
+                {data.map((_, i) => (
+                  <Cell
+                    key={`cell-${i}`}
+                    fill={COLORS[i]}
+                    className="stroke-background"
+                  />
+                ))}
+              </Pie>
+            )}
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
