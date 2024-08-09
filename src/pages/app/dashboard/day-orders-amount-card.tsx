@@ -4,6 +4,8 @@ import { Utensils } from "lucide-react";
 import { getDayOrdersAmount } from "@/api/get-day-orders-amount";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { MetricCardSkeleton } from "./metric-card-skeleton";
+
 export function DayOrdersAmountCard() {
   const { data: getDayOrdersAmountFn } = useQuery({
     queryKey: ["day-orders-amount"],
@@ -15,25 +17,29 @@ export function DayOrdersAmountCard() {
         <CardTitle className="text-base font-semibold">Pedidos (dia)</CardTitle>
         <Utensils className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
-      {getDayOrdersAmountFn && (
-        <CardContent className="space-y-1">
-          <span className="text-2xl font-bold tracking-tight">
-            {getDayOrdersAmountFn.amount}
-          </span>
-          <p className="text-sm text-muted-foreground">
-            {getDayOrdersAmountFn.diffFromYesterday >= 0 ? (
-              <span className="text-emerald-500 dark:text-emerald-400">
-                +{getDayOrdersAmountFn.diffFromYesterday}%
-              </span>
-            ) : (
-              <span className="text-rose-500 dark:text-rose-400">
-                {getDayOrdersAmountFn.diffFromYesterday}%
-              </span>
-            )}{" "}
-            em relação a ontem
-          </p>
-        </CardContent>
-      )}
+      <CardContent className="space-y-1">
+        {getDayOrdersAmountFn ? (
+          <>
+            <span className="text-2xl font-bold tracking-tight">
+              {getDayOrdersAmountFn.amount}
+            </span>
+            <p className="text-sm text-muted-foreground">
+              {getDayOrdersAmountFn.diffFromYesterday >= 0 ? (
+                <span className="text-emerald-500 dark:text-emerald-400">
+                  +{getDayOrdersAmountFn.diffFromYesterday}%
+                </span>
+              ) : (
+                <span className="text-rose-500 dark:text-rose-400">
+                  {getDayOrdersAmountFn.diffFromYesterday}%
+                </span>
+              )}{" "}
+              em relação a ontem
+            </p>
+          </>
+        ) : (
+          <MetricCardSkeleton />
+        )}
+      </CardContent>
     </Card>
   );
 }
