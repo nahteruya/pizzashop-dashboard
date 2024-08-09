@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { subDays } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 import {
@@ -11,7 +12,6 @@ import {
   YAxis,
 } from "recharts";
 import colors from "tailwindcss/colors";
-import { date } from "zod";
 
 import { getDailyRevenueInPeriod } from "@/api/get-daily-revenue-in-period";
 import {
@@ -63,7 +63,7 @@ export function RevenueChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {chartDate && (
+        {chartDate ? (
           <ResponsiveContainer width="100%" height={248}>
             <LineChart data={chartDate} style={{ fontSize: 12 }}>
               <XAxis dataKey="date" axisLine={false} tickLine={false} dy={16} />
@@ -91,6 +91,10 @@ export function RevenueChart() {
               />
             </LineChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="flex h-[240px] w-full items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
         )}
       </CardContent>
     </Card>
