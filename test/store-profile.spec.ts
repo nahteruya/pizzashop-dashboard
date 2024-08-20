@@ -19,9 +19,9 @@ test("update store profile successfully", async ({ page }) => {
   expect(toast).toBeVisible();
 
   await page.getByRole("button", { name: "Close" }).click();
-  await page.waitForTimeout(250);
+  //await page.waitForTimeout(250);
 
-  expect(
+  await expect(
     page.getByRole("button", { name: "Confeitaria da Nah" }),
   ).toBeVisible();
 });
