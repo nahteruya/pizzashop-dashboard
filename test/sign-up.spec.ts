@@ -1,30 +1,34 @@
 import { expect, test } from "@playwright/test";
 
-test("sign in successfully", async ({ page }) => {
-  await page.goto("/sign-in", { waitUntil: "networkidle" });
+test("sign up successfully", async ({ page }) => {
+  await page.goto("/sign-up", { waitUntil: "networkidle" });
+  await page.getByLabel("Nome do estabelecimento").fill("Pizza Shop");
+  await page.getByLabel("Seu nome").fill("Naomi Teruya");
   await page.getByLabel("Seu e-mail").fill("nahteruya@gmail.com");
-  await page.getByRole("button", { name: "Acessar painel" }).click();
+  await page.getByLabel("Seu celular").fill("(11) 96456-0535");
+  await page.getByRole("button", { name: "Finalizar cadastro" }).click();
 
-  const toast = page.getByText(
-    "Enviamos um link de autenticação para seu e-mail",
-  );
-
-  expect(toast).toBeVisible();
-});
-
-test("sign in with wrong credentials", async ({ page }) => {
-  await page.goto("/sign-in", { waitUntil: "networkidle" });
-  await page.getByLabel("Seu e-mail").fill("wrong@gmail.com");
-  await page.getByRole("button", { name: "Acessar painel" }).click();
-
-  const toast = page.getByText("Credenciais inválidas");
+  const toast = page.getByText("Restaurante cadastrado com sucesso");
 
   expect(toast).toBeVisible();
 });
 
-test("navigate to new restaurant page", async ({ page }) => {
-  await page.goto("/sign-in", { waitUntil: "networkidle" });
-  await page.getByRole("link", { name: "Novo estabelecimento" }).click();
+test("sign up with wrong credentials", async ({ page }) => {
+  await page.goto("/sign-up", { waitUntil: "networkidle" });
+  await page.getByLabel("Nome do estabelecimento").fill("Invalid Name");
+  await page.getByLabel("Seu nome").fill("Naomi Teruya");
+  await page.getByLabel("Seu e-mail").fill("nahteruya@gmail.com");
+  await page.getByLabel("Seu celular").fill("(11) 96456-0535");
+  await page.getByRole("button", { name: "Finalizar cadastro" }).click();
 
-  expect(page.url()).toContain("/sign-up");
+  const toast = page.getByText("Erro ao cadastrar restaurante");
+
+  expect(toast).toBeVisible();
+});
+
+test("navigate to login page", async ({ page }) => {
+  await page.goto("/sign-up", { waitUntil: "networkidle" });
+  await page.getByRole("link", { name: "Login" }).click();
+
+  expect(page.url()).toContain("/sign-in");
 });
